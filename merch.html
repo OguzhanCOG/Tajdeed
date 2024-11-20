@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Mr+De+Haviland&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Tajdeed Merchandise</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #40e0d0;
+            --background-light: #f0f0f0;
+            --text-color: #333;
+        }
+        
+        body {
+            background-color: var(--background-light);
+            font-family: 'Merriweather', serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .taskbar {
+            position: fixed;
+            top: 50px;
+            left: -250px;
+            width: 250px;
+            background-color: var(--background-light);
+            padding: 20px;
+            height: calc(100% - 50px);
+            transition: 0.4s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+        }
+
+        .taskbar.open {
+            left: 0;
+        }
+
+        .taskbar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            z-index: 1001;
+            font-size: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .taskbar-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .taskbar a {
+            display: block;
+            margin: 15px 0;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .taskbar a:hover {
+            color: var(--secondary-color);
+        }
+
+        .main-content {
+            margin-left: 60px;
+            padding: 20px;
+            padding-top: 50px;
+        }
+
+        .logo-container {
+            text-align: center;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-family: 'Mr De Haviland', cursive;
+            font-size: 120px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+            letter-spacing: 2px;
+        }
+
+        .logo-underline {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .product {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border: 2px solid var(--secondary-color);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .product:hover {
+            transform: translateY(-5px);
+        }
+
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .product h3 {
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+
+        .product p {
+            color: var(--text-color);
+            margin: 5px 0 15px;
+        }
+
+        .add-to-cart {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        .add-to-cart:hover {
+            background-color: var(--primary-color);
+        }
+
+        .bubble-cart {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--secondary-color);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: none;
+            transition: transform 0.3s ease;
+        }
+
+        .bubble-cart:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            border: 2px solid var(--secondary-color);
+            display: none;
+            z-index: 1002;
+            min-width: 300px;
+        }
+
+        .cart-popup h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .close-cart {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="taskbar-toggle" onclick="toggleTaskbar()">☰</div>
+
+    <div class="taskbar" id="taskbar">
+        <a href="index.html">Home</a>
+        <a href="courses.html">Courses</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="newsletter.html">Newsletter</a>
+        <a href="merch.html">Merchandise</a>
+    </div>
+
+    <div class="main-content">
+        <div class="logo-container">
+            <div class="logo">taجdeed</div>
+            <svg class="logo-underline" width="100" height="50">
+                <path d="M10,40 Q50,10 90,40" fill="none" stroke="#40e0d0" stroke-width="3" />
+            </svg>
+        </div>
+
+        <div class="product-grid" id="product-grid">
+        </div>
+    </div>
+
+    <button class="bubble-cart" onclick="showCart()">🛒</button>
+
+    <div class="cart-popup" id="cart-popup">
+        <h2>Your Cart</h2>
+        <div id="cart-items"></div>
+        <button class="close-cart" onclick="hideCart()">Close</button>
+    </div>
+
+    <script>
+        const products = [
+            { 
+                id: 1, 
+                name: "Calligraphy Kit", 
+                price: 49.99, 
+                image: "IMG/CalligraphyKit.jpg"
+            },
+            { 
+                id: 2, 
+                name: "Reed Pen", 
+                price: 29.99, 
+                image: "IMG/ReedPen.jpg"
+            },
+            { 
+                id: 3, 
+                name: "Ink Set", 
+                price: 39.99, 
+                image: "IMG/InkSet.jpg"
+            },
+            { 
+                id: 4, 
+                name: "Practice Notebook", 
+                price: 19.99, 
+                image: "IMG/Notepad.jpg"
+            }
+        ];
+
+        const cart = [];
+
+        function loadProducts() {
+            const productGrid = document.getElementById("product-grid");
+            products.forEach(product => {
+                const productElement = document.createElement("div");
+                productElement.className = "product";
+                productElement.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>$${product.price.toFixed(2)}</p>
+                    <button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>
+                `;
+                productGrid.appendChild(productElement);
+            });
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            cart.push(product);
+            showCart();
+        }
+
+        function showCart() {
+            const cartPopup = document.getElementById("cart-popup");
+            const cartItems = document.getElementById("cart-items");
+            cartItems.innerHTML = "";
+            
+            cart.forEach((item, index) => {
+                const cartItem = document.createElement("div");
+                cartItem.className = "cart-item";
+                cartItem.innerHTML = `
+                    <span>${item.name} - $${item.price.toFixed(2)}</span>
+                    <button onclick="removeFromCart(${index})" style="color: red;">×</button>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+            
+            cartPopup.style.display = "block";
+        }
+
+        function hideCart() {
+            document.getElementById("cart-popup").style.display = "none";
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            showCart();
+        }
+
+        function toggleTaskbar() {
+            const taskbar = document.getElementById('taskbar');
+            taskbar.classList.toggle('open');
+        }
+
+        window.onload = loadProducts;
+    </script>
+</body>
+</html>

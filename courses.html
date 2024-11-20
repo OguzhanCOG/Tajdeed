@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Mr+De+Haviland&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Tajdeed Courses</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #40e0d0;
+            --background-light: #f0f0f0;
+            --text-color: #333;
+        }
+
+        body {
+            background-color: var(--background-light);
+            font-family: 'Merriweather', serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .taskbar {
+            position: fixed;
+            top: 50px;
+            left: -250px;
+            width: 250px;
+            background-color: var(--background-light);
+            padding: 20px;
+            height: calc(100% - 50px);
+            transition: 0.4s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+        }
+
+        .taskbar.open {
+            left: 0;
+        }
+
+        .taskbar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            z-index: 1001;
+            font-size: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .taskbar a {
+            display: block;
+            margin: 15px 0;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .taskbar a:hover {
+            color: var(--secondary-color);
+        }
+
+        .logo-container {
+            text-align: center;
+            position: relative;
+            margin: 50px 0;
+        }
+
+        .logo {
+            font-family: 'Mr De Haviland', cursive;
+            font-size: 120px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+            letter-spacing: 2px;
+        }
+
+        .logo-underline {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .course-card {
+            background-color: white;
+            border: 2px solid var(--secondary-color);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .course-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .course-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .course-name {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .course-price {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .popup-content {
+            background-color: white;
+            width: 80%;
+            max-width: 800px;
+            padding: 30px;
+            border-radius: 15px;
+            position: relative;
+            border: 2px solid var(--secondary-color);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        .popup-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .popup-details h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .popup-pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .popup-pros, .popup-cons {
+            background-color: var(--background-light);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .popup-pros h3, .popup-cons h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="taskbar-toggle" onclick="toggleTaskbar()">☰</div>
+
+    <div class="taskbar" id="taskbar">
+        <a href="index.html">Home</a>
+        <a href="courses.html">Courses</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="newsletter.html">Newsletter</a>
+        <a href="merch.html">Merchandise</a>
+    </div>
+
+    <div class="logo-container">
+        <div class="logo">taجdeed</div>
+        <svg class="logo-underline" width="100" height="50">
+            <path d="M10,40 Q50,10 90,40" fill="none" stroke="#40e0d0" stroke-width="3" />
+        </svg>
+    </div>
+    
+    <div class="courses-grid" id="courses-grid"></div>
+
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <span class="popup-close" onclick="closePopup()">×</span>
+            <img class="popup-image" id="popup-image" src="" alt="Course Image">
+            <div class="popup-details">
+                <h2 id="popup-name"></h2>
+                <p id="popup-price"></p>
+                <p id="popup-description"></p>
+            </div>
+            <div class="popup-pros-cons">
+                <div class="popup-pros">
+                    <h3>Benefits</h3>
+                    <ul id="popup-pros-list"></ul>
+                </div>
+                <div class="popup-cons">
+                    <h3>Requirements</h3>
+                    <ul id="popup-cons-list"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const courses = [
+            {
+                id: 1,
+                name: 'History of Arabic Calligraphy',
+                price: '£150',
+                image: 'IMG/History.jpg',
+                description: 'Explore the rich history and cultural significance of Arabic calligraphy in the Islamic world.',
+                pros: ['Comprehensive historical overview', 'Cultural context understanding', 'Traditional techniques introduction'],
+                cons: ['Basic Arabic knowledge recommended', 'Materials not included', 'Weekly attendance required']
+            },
+            {
+                id: 2,
+                name: 'Traditional Arabic Writing',
+                price: '£200',
+                image: 'IMG/Alphabet.jpg',
+                description: 'Master traditional Arabic writing techniques with guidance from cultural institutions.',
+                pros: ['Hands-on practice', 'Expert instruction', 'Cultural institution partnership'],
+                cons: ['Previous experience recommended', 'Own tools required', 'Limited class size']
+            },
+            {
+                id: 3,
+                name: 'Calligraphy Workshop',
+                price: '£180',
+                image: 'IMG/Workshop.jpeg',
+                description: 'Blend traditional calligraphy with modern graffiti techniques in this innovative workshop.',
+                pros: ['Modern art fusion', 'Creative expression', 'Contemporary application'],
+                cons: ['Basic calligraphy skills needed', 'Outdoor sessions included', 'Material costs extra']
+            }
+        ];
+
+        function toggleTaskbar() {
+            const taskbar = document.getElementById('taskbar');
+            taskbar.classList.toggle('open');
+        }
+
+        function populateCourses() {
+            const grid = document.getElementById('courses-grid');
+            courses.forEach(course => {
+                const courseCard = document.createElement('div');
+                courseCard.classList.add('course-card');
+                courseCard.onclick = () => openPopup(course);
+
+                courseCard.innerHTML = `
+                    <img class="course-image" src="${course.image}" alt="${course.name}">
+                    <div class="course-info">
+                        <div class="course-name">${course.name}</div>
+                        <div class="course-price">${course.price}</div>
+                    </div>
+                `;
+                grid.appendChild(courseCard);
+            });
+        }
+
+        function openPopup(course) {
+            document.getElementById('popup-image').src = course.image;
+            document.getElementById('popup-name').textContent = course.name;
+            document.getElementById('popup-price').textContent = course.price;
+            document.getElementById('popup-description').textContent = course.description;
+
+            const prosList = document.getElementById('popup-pros-list');
+            prosList.innerHTML = course.pros.map(pro => `<li>${pro}</li>`).join('');
+
+            const consList = document.getElementById('popup-cons-list');
+            consList.innerHTML = course.cons.map(con => `<li>${con}</li>`).join('');
+
+            document.getElementById('popup').style.display = 'flex';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const popup = document.getElementById('popup');
+            if (event.target === popup) {
+                closePopup();
+            }
+        }
+
+        window.onload = populateCourses;
+    </script>
+</body>
+</html>

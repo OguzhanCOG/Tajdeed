@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Mr+De+Haviland&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Contact Tajdeed</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #40e0d0;
+            --background-light: #f0f0f0;
+            --text-color: #333;
+        }
+        body {
+            background-color: var(--background-light);
+            font-family: 'Merriweather', serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.6;
+            color: var(--text-color);
+            position: relative;
+        }
+        .taskbar {
+            position: fixed;
+            top: 50px;
+            left: -300px;
+            width: 300px;
+            background-color: var(--background-light);
+            padding: 30px;
+            height: calc(100% - 50px);
+            transition: 0.4s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+        }
+        .taskbar.open {
+            left: 0;
+        }
+        .taskbar-toggle {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            cursor: pointer;
+            z-index: 1001;
+            font-size: 36px;
+            transition: transform 0.3s ease;
+        }
+        .taskbar-toggle:hover {
+            transform: scale(1.1);
+        }
+        .taskbar a {
+            display: block;
+            margin: 20px 0;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        .taskbar a:hover {
+            color: var(--secondary-color);
+        }
+        .contact-container {
+            background-color: white;
+            max-width: 800px;
+            width: 90%;
+            margin: 120px 20px;
+            padding: 60px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border: 3px solid var(--secondary-color);
+        }
+        .logo-container {
+            position: relative;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .logo {
+            font-family: 'Mr De Haviland', cursive;
+            font-size: 120px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+            letter-spacing: 2px;
+        }
+        .logo-underline {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+        }
+        .contact-form label {
+            margin-top: 20px;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        .contact-form input, 
+        .contact-form textarea {
+            width: 100%;
+            padding: 15px;
+            margin-top: 8px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+        .contact-form textarea {
+            height: 200px;
+        }
+        .submit-btn {
+            margin-top: 30px;
+            padding: 18px 35px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .submit-btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="taskbar-toggle" onclick="toggleTaskbar()">☰</div>
+
+    <div class="taskbar" id="taskbar">
+        <a href="index.html">Home</a>
+        <a href="courses.html">Courses</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="newsletter.html">Newsletter</a>
+        <a href="merch.html">Merchandise</a>
+    </div>
+
+    <div class="contact-container">
+        <div class="logo-container">
+            <div class="logo">taجdeed</div>
+            <svg class="logo-underline" width="100" height="50">
+                <path d="M10,40 Q50,10 90,40" fill="none" stroke="#40e0d0" stroke-width="3" />
+            </svg>
+        </div>
+        <form class="contact-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+    </div>
+
+    <script>
+        function toggleTaskbar() {
+            const taskbar = document.getElementById('taskbar');
+            taskbar.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>

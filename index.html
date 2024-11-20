@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Mr+De+Haviland&display=swap" rel="stylesheet">
+    <title>Taجdeed - Calligraphy</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #40e0d0; 
+            --background-light: #f0f0f0; 
+            --text-color: #333;
+        }
+        body {
+            background-color: var(--background-light);
+            font-family: 'Merriweather', serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+        .taskbar {
+            position: fixed;
+            top: 50px;
+            left: -250px;
+            width: 250px;
+            background-color: var(--background-light);
+            padding: 20px;
+            height: calc(100% - 50px);
+            transition: 0.4s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+        }
+        .taskbar.open {
+            left: 0;
+        }
+        .taskbar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            z-index: 1001;
+            font-size: 30px;
+            transition: transform 0.3s ease;
+        }
+        .taskbar-toggle:hover {
+            transform: scale(1.1);
+        }
+        .taskbar a {
+            display: block;
+            margin: 15px 0;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        .taskbar a:hover {
+            color: var(--secondary-color);
+        }
+        .logo {
+            margin-top: 100px;
+            font-size: 120px;
+            font-family: 'Mr De Haviland', cursive;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 4px 4px 6px rgba(0,0,0,0.2);
+            letter-spacing: 2px;
+        }
+        .poem-container {
+            text-align: center;
+            margin: 30px;
+            padding: 30px;
+            border: 2px solid var(--secondary-color);
+            max-width: 700px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .poem {
+            font-size: 1.3em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        .poem-author {
+            text-align: right;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .random-poem-btn {
+            margin-top: 20px;
+            padding: 12px 25px;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Merriweather', serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .random-poem-btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.2);
+        }
+        .copyright {
+            position: fixed;
+            bottom: 10px;
+            text-align: center;
+            width: 100%;
+            font-size: 12px;
+            color: #888;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="taskbar-toggle" onclick="toggleTaskbar()">☰</div>
+
+    <div class="taskbar" id="taskbar">
+        <a href="index.html">Home</a>
+        <a href="courses.html">Courses</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="newsletter.html">Newsletter</a>
+        <a href="merch.html">Merchandise</a>
+    </div>
+
+    <div class="logo">
+        taجdeed
+        <svg width="100" height="50" style="position: absolute; top: 180px; left: 50%; transform: translateX(-50%);">
+            <path d="M10,40 Q50,10 90,40" fill="none" stroke="#40e0d0" stroke-width="3" />
+        </svg>
+    </div>
+
+    <div class="poem-container">
+        <div class="poem" id="poem-content">
+            I carry the echoes of silence within me,<br>
+            Words dance between memory and pain,<br>
+            Like a river flowing without a melody,<br>
+            Carrying stories that forever remain.
+        </div>
+        <div class="poem-author" id="poem-author">
+            - Inspired by Mahmoud Darwish
+        </div>
+    </div>
+
+    <button class="random-poem-btn" onclick="fetchRandomPoem()">Random Poem</button>
+
+    <div class="copyright">
+        © 2024 Taجdeed Calligraphy. All Rights Reserved.
+    </div>
+
+    <script>
+        function toggleTaskbar() {
+            const taskbar = document.getElementById('taskbar');
+            taskbar.classList.toggle('open');
+        }
+
+        function fetchRandomPoem() {
+    // Fetch all poems from the Flask API
+    fetch('http://127.0.0.1:5001/api/poems')  // Replace with your API URL
+        .then(response => response.json()) // Parse the JSON response
+        .then(data => {
+            // Check if poems were returned
+            if (data.poems && data.poems.length > 0) {
+                // Randomly select a poem from the list
+                const randomPoem = data.poems[Math.floor(Math.random() * data.poems.length)];
+
+                // Get the content and author of the selected poem
+                const poemContent = randomPoem.text;  // Use 'text' from the DB instead of 'content'
+                const poemAuthor = randomPoem.name;  // If you want to display the poem's name as the author
+
+                // Display the poem and author on the page
+                document.getElementById('poem-content').innerHTML = poemContent.replace(/\n/g, '<br>');  // Replace newlines with <br>
+                document.getElementById('poem-author').textContent = `- ${poemAuthor}`;
+            } else {
+                alert('No poems available.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching the poem:', error);
+            alert('There was an issue fetching the poem.');
+        });
+}
+
+    </script>
+</body>
+</html>
